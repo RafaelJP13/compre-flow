@@ -1,4 +1,4 @@
-# CompreFlow 🛒
+## CompreFlow 🛒
 
 A modern Retail Execution + Pricing Intelligence + Sales Intelligence platform built with React.js, React Native and NestJS is a multi-tenant B2B SaaS solution built for companies that need to centralize, automate, and scale their operations with security, reliability, and high performance. Inspired by enterprise-grade infrastructures, the platform delivers a complete ecosystem for business management, operational monitoring, and real-time strategic insights.
 
@@ -8,11 +8,21 @@ Built with a modern and scalable architecture, the platform supports multiple co
 
 Learn more: 👉 [Visit Compre Flow](https://institucional-compre-flow.vercel.app/)
 
+<div align="center">
+
+# Fluxo da Plataforma
+
+<img src="/docs/proposito.png" width="1000"/>
+
+</div>
+
 ---
 
 # 🚀 About the Project
 
 Compre Mais is a Pricing and Salesforce application focused on scalability, organization, and clean architecture.
+
+
 
 The project aims to simulate a modern Pricing and Salesforce experience with:
 
