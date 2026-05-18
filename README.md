@@ -10,8 +10,6 @@ Learn more: 👉 [Visit Compre Flow](https://institucional-compre-flow.vercel.ap
 
 <div align="center">
 
-# Fluxo da Plataforma
-
 <img src="/docs/proposito.png" width="1000"/>
 
 </div>
