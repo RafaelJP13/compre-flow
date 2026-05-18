@@ -82,6 +82,7 @@ The backend requires a `.env` and `.env` file in the root directory. ( REFACTOR 
 
 ```bash
 JWT_SECRET="CHANGE_THIS_TO_A_LONG_RANDOM_SECRET"
+JWT_REFRESH_SECRET="CHANGE_THIS_TO_ANOTHER_LONG_RANDOM_SECRET"
 PORT=3000
 NODE_ENV=development
 
