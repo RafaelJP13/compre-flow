@@ -56,10 +56,11 @@ This repository contains both frontend( Web | Mobile) and backend applications.
 
 ```bash
 compre-mais/
-├── backend/       # NestJS API
-├── frontend/      # React.js application
-├── infra/         # Infra
-├── mobile/        # Mobile
+├── backend/            # NestJS API
+├── dashboard-empresas/ # React.js applicatio
+├── frontend/           # React.js application
+├── infra/              # Infra
+├── mobile/             # Mobile
 ```
 
 ---
