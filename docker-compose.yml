@@ -2,15 +2,22 @@ services:
   frontend:
     build:
       context: ./frontend
-      dockerfile: ../infra/Dockerfile.frontend.dev
+      dockerfile: ../infra/Dockerfile.react.dev
     ports:
       - "5173:5173"
     volumes:
       - ./frontend:/app
       - /app/node_modules
-    environment:
-      - CHOKIDAR_USEPOLLING=true
 
+  dashboard-empresas:
+    build:
+      context: ./dashboard-empresas
+      dockerfile: ../infra/Dockerfile.next.dev
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./dashboard-empresas:/app
+      - /app/node_modules
   backend:
     build:
       context: ./backend
@@ -27,6 +34,7 @@ services:
       POSTGRES_URL: ${POSTGRES_URL}
       JWT_SECRET: ${JWT_SECRET}
       JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET}
+
   postgres:
     image: postgres:16
     container_name: shopping-cart-db
@@ -34,9 +42,9 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_USER:  ${POSTGRES_USER}
-      POSTGRES_PASSWORD:  ${POSTGRES_PASSWORD}
-      POSTGRES_DB:  ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
