@@ -82,7 +82,7 @@ git clone https://github.com/RafaelJP13/compre-flow.git
 
 # 🔧 Setup
 
-The backend requires a `.env` file in the root directory.
+The backend requires a `.env` and `.env` file in the root directory. ( REFACTOR ) 
 
 ```bash
 JWT_SECRET="CHANGE_THIS_TO_A_LONG_RANDOM_SECRET"
@@ -145,6 +145,7 @@ http://localhost:5173
 - [x] Unit Tests
 - [x] Snyk to scan the dependencies
 - [x] Company Dashboard with Next.js
+- [ ] Google Authentication in Company Dashboard
 - [ ] UI Componentization
 - [ ] Permission-Based Access Control (PBAC) 
 - [ ] Company Dashboard
