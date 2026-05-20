@@ -8,9 +8,10 @@ import { CompanyGuard } from '../guards/company.guard';
 import { DpopGuard } from '../guards/dpop.guard';
 import { VerifyProof } from '../dpop/verify-proof';
 import { ReplayCache } from '../dpop/replay-cache';
-
+import { PrismaModule } from '../../../prisma/prisma.module';
 @Module({
     imports: [
+        PrismaModule,
         JwtModule.register({
             secret: process.env.JWT_SECRET,
             signOptions: {
@@ -24,6 +25,7 @@ import { ReplayCache } from '../dpop/replay-cache';
     ],
 
     providers: [
+
         CompanyAuthService,
         CompanyStrategy,
         CompanyGuard,

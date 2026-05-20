@@ -1,28 +1,39 @@
-import { Injectable } from '@nestjs/common';
+import {
+    Injectable,
+    OnModuleDestroy,
+} from '@nestjs/common';
 
 @Injectable()
-export class ReplayCache {
-    // jti -> expiry timestamp (ms)
+export class ReplayCache implements OnModuleDestroy {
     private readonly cache = new Map<string, number>();
 
-    // limpeza a cada 5 minutos
+    private interval: NodeJS.Timeout;
+
     constructor() {
-        setInterval(() => this.cleanup(), 5 * 60 * 1000);
+        this.interval = setInterval(
+            () => this.cleanup(),
+            5 * 60 * 1000,
+        );
     }
 
-    /**
-     * Retorna true se o jti já foi visto (replay).
-     * Caso contrário, registra e retorna false.
-     */
+    onModuleDestroy() {
+        clearInterval(this.interval);
+    }
+
     has(jti: string, ttlSeconds: number = 120): boolean {
         const now = Date.now();
+
         const entry = this.cache.get(jti);
 
         if (entry !== undefined && entry > now) {
-            return true; // replay detectado
+            return true;
         }
 
-        this.cache.set(jti, now + ttlSeconds * 1000);
+        this.cache.set(
+            jti,
+            now + ttlSeconds * 1000,
+        );
+
         return false;
     }
 
