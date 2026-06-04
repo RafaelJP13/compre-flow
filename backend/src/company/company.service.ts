@@ -155,7 +155,7 @@ export class CompanyService {
         };
 
         return {
-            accessToken:
+            company_access_token:
                 this.jwtService.sign(
                     payload,
                     {
@@ -165,7 +165,7 @@ export class CompanyService {
                     },
                 ),
 
-            refreshToken:
+            company_refresh_token:
                 this.jwtService.sign(
                     payload,
                     {

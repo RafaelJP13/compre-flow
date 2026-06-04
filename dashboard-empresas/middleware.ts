@@ -5,7 +5,7 @@ export function middleware(
     request: NextRequest,
 ) {
     const token =
-        request.cookies.get('access_token');
+        request.cookies.get('company_access_token');
 
     if (
         !token &&

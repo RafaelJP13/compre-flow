@@ -52,8 +52,8 @@ export class CompanyController {
             await this.companyService.login(body);
 
         res.cookie(
-            'access_token',
-            tokens.accessToken,
+            'company_access_token',
+            tokens.company_access_token,
             {
                 ...this.cookieOptions,
                 maxAge: 1000 * 60 * 15,
@@ -61,8 +61,8 @@ export class CompanyController {
         );
 
         res.cookie(
-            'refresh_token',
-            tokens.refreshToken,
+            'company_refresh_token',
+            tokens.company_refresh_token,
             {
                 ...this.cookieOptions,
                 maxAge:

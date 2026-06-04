@@ -125,6 +125,7 @@ export default function LoginForm() {
                         />
 
                         <input
+
                             type="email"
                             placeholder="voce@email.com"
                             value={email}
@@ -134,6 +135,7 @@ export default function LoginForm() {
                                 )
                             }
                             className="
+                                text-gray-400
                                 w-full
                                 outline-none
                                 bg-transparent
@@ -181,6 +183,7 @@ export default function LoginForm() {
                                 )
                             }
                             className="
+                                text-gray-400
                                 w-full
                                 outline-none
                                 bg-transparent

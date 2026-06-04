@@ -95,7 +95,7 @@ export default function LoginPage() {
                                 onChange={(e) =>
                                     setEmail(e.target.value)
                                 }
-                                className="w-full bg-zinc-800 border border-zinc-700 rounded-xl py-3 pl-10 pr-4 text-white outline-none focus:ring-2 focus:ring-white"
+                                className="w-full bg-zinc-800 border border-zinc-700 rounded-xl py-3 pl-10 pr-4 text-black outline-none focus:ring-2 focus:ring-white"
                             />
                         </div>
                     </div>
@@ -119,7 +119,7 @@ export default function LoginPage() {
                                 onChange={(e) =>
                                     setPassword(e.target.value)
                                 }
-                                className="w-full bg-zinc-800 border border-zinc-700 rounded-xl py-3 pl-10 pr-4 text-white outline-none focus:ring-2 focus:ring-white"
+                                className="w-full bg-zinc-800 border border-zinc-700 rounded-xl py-3 pl-10 pr-4 text-black outline-none focus:ring-2 focus:ring-white"
                             />
                         </div>
                     </div>
@@ -135,7 +135,7 @@ export default function LoginPage() {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="w-full bg-white text-black font-semibold py-3 rounded-xl hover:bg-zinc-200 transition disabled:opacity-50"
+                        className="w-full bg-white text-black font-semibold py-3 rounded-xl hover:bg-zinc-200 transition disabled:opacity-50 cursor-pointer"
                     >
                         {loading
                             ? "Carregando..."

@@ -42,7 +42,7 @@ export default function CreateCompanyPage() {
     const [formData, setFormData] = useState({
         adminName: "",
         adminEmail: "",
-        adminPassword: "",
+        passwordAdmin: "",
 
         representante: "",
 
@@ -106,7 +106,7 @@ export default function CreateCompanyPage() {
                 cep: data.cep || "",
 
                 adminEmail: data.email || "",
-
+                passwordAdmin: "",
                 phone:
                     data.ddd_telefone_1 || "",
 
