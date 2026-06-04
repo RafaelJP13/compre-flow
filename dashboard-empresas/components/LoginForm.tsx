@@ -32,38 +32,62 @@ export default function LoginForm() {
             setLoading(true);
 
             const response = await fetch(
-                "http://localhost:3000/auth/login",
+                "http://localhost:3000/companies/login",
                 {
                     method: "POST",
-
                     headers: {
                         "Content-Type":
                             "application/json",
                     },
-
                     credentials: "include",
-
                     body: JSON.stringify({
-                        email,
-                        password,
+                        adminEmail: email,
+                        passwordAdmin: password,
                     }),
                 }
             );
 
             if (!response.ok) {
                 throw new Error(
-                    "Invalid credentials"
+                    "Credenciais inválidas"
                 );
             }
 
             router.push("/dashboard");
+
+            const data =
+                await response.json();
+
+            if (!response.ok) {
+                throw new Error(
+                    data.message ||
+                    "Credenciais inválidas"
+                );
+            }
+
+            localStorage.setItem(
+                "accessToken",
+                data.accessToken
+            );
+
+            localStorage.setItem(
+                "refreshToken",
+                data.refreshToken
+            );
+
+            router.push("/dashboard");
         } catch (error) {
-            alert("Erro ao logar");
+            console.error(error);
+
+            alert(
+                error instanceof Error
+                    ? error.message
+                    : "Erro ao logar"
+            );
         } finally {
             setLoading(false);
         }
     }
-
     return (
         <div className="w-full max-w-md">
             <div className="mb-10">

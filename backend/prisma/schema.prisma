@@ -12,6 +12,7 @@ model Company {
 
   adminName     String
   adminEmail    String
+  passwordAdmin String
   representante String
   fantasyName   String
   legalName     String

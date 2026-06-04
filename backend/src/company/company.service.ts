@@ -1,16 +1,21 @@
+import * as bcrypt from 'bcrypt';
 // company.service.ts
 
-import { ConflictException, Injectable, NotFoundException } from "@nestjs/common";
+import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
 
 import { PrismaService } from "../../prisma/prisma.service";
 
 import { CreateCompanyDTO } from "./dto/create-company.dto";
 import { UpdateCompanyDTO } from "./dto/update-company.dto";
+import { LoginCompanyDTO } from "./dto/login-company.dto";
+
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class CompanyService {
     constructor(
-        private prisma: PrismaService
+        private prisma: PrismaService,
+        private jwtService: JwtService
     ) { }
 
     async findAll() {
@@ -22,6 +27,7 @@ export class CompanyService {
             data: {
                 adminName: data.adminName,
                 adminEmail: data.adminEmail,
+                passwordAdmin: await bcrypt.hash(data.passwordAdmin, 10),
 
                 representante:
                     data.representante,
@@ -95,6 +101,7 @@ export class CompanyService {
                 await this.prisma.company.findFirst({
                     where: {
                         adminEmail: data.adminEmail,
+                        passwordAdmin: await bcrypt.hash(data.passwordAdmin, 10),
                         NOT: { id },
                     },
                 });
@@ -111,4 +118,42 @@ export class CompanyService {
             data,
         });
     }
+
+    async login(data: LoginCompanyDTO) {
+        const company = await this.prisma.company.findFirst({
+            where: { adminEmail: data.adminEmail },
+        });
+
+        if (!company || !company.passwordAdmin) {
+            throw new UnauthorizedException('Invalid credentials');
+        }
+
+        const valid = await bcrypt.compare(
+            data.passwordAdmin,
+            company.passwordAdmin,
+        );
+
+        if (!valid) {
+            throw new UnauthorizedException('Invalid credentials');
+        }
+
+        const payload = {
+            sub: company.id,
+            email: company.adminEmail,
+            role: 'COMPANY_ADMIN',
+            type: 'COMPANY',
+        };
+
+        return {
+            accessToken: this.jwtService.sign(payload, {
+                secret: process.env.JWT_SECRET,
+                expiresIn: '15m',
+            }),
+            refreshToken: this.jwtService.sign(payload, {
+                secret: process.env.JWT_REFRESH_SECRET,
+                expiresIn: '7d',
+            }),
+        };
+    }
+
 }

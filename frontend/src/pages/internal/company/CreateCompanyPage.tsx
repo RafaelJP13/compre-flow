@@ -42,6 +42,7 @@ export default function CreateCompanyPage() {
     const [formData, setFormData] = useState({
         adminName: "",
         adminEmail: "",
+        adminPassword: "",
 
         representante: "",
 
@@ -183,6 +184,7 @@ export default function CreateCompanyPage() {
             setFormData({
                 adminName: "",
                 adminEmail: "",
+                passwordAdmin: "",
 
                 representante: "",
 
@@ -360,6 +362,48 @@ export default function CreateCompanyPage() {
                                             handleChange
                                         }
                                         placeholder="admin@empresa.com"
+                                        className="
+                                            w-full
+                                            pl-12
+                                            pr-4
+                                            py-3
+                                            rounded-2xl
+                                            border border-gray-200
+                                            outline-none
+                                            focus:ring-4
+                                            focus:ring-[#ffac2e]/20
+                                            focus:border-[#ffac2e]
+                                        "
+                                    />
+                                </div>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    Senha
+                                </label>
+
+                                <div className="relative">
+                                    <Mail
+                                        size={18}
+                                        className="
+                                            absolute
+                                            left-4
+                                            top-1/2
+                                            -translate-y-1/2
+                                            text-gray-400
+                                        "
+                                    />
+
+                                    <input
+                                        type="password"
+                                        name="passwordAdmin"
+                                        value={
+                                            formData.passwordAdmin
+                                        }
+                                        onChange={
+                                            handleChange
+                                        }
+                                        placeholder="••••••••"
                                         className="
                                             w-full
                                             pl-12

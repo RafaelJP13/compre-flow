@@ -1,10 +1,7 @@
-import { Injectable } from "@nestjs/common";
-import { PrismaService } from "../../../prisma/prisma.service";
-
 export type UpdateCompanyDTO = {
     adminName: string;
     adminEmail: string;
-
+    passwordAdmin: string;
     representante: string;
 
     fantasyName: string;

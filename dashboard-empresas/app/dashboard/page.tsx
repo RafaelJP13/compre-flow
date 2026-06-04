@@ -19,7 +19,6 @@ export default function Dashboard() {
         { produto: 'Teclado Mecânico', quantidade: 37, valor: 'R$ 18.500' },
         { produto: 'Monitor UltraWide', quantidade: 19, valor: 'R$ 38.000' },
     ];
-
     return (
         <div className="min-h-screen bg-black text-white flex">
             {/* Overlay Mobile */}
