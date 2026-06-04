@@ -22,12 +22,14 @@ export class CompanyController {
         private readonly companyService: CompanyService,
     ) { }
 
-    private readonly cookieOptions = {
-        httpOnly: true,
-        secure: false,
-        sameSite: 'lax' as const,
-        path: '/',
-    };
+    private get cookieOptions() {
+        return {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax' as const,
+            path: '/',
+        };
+    }
 
     @Get()
     findAll() {
@@ -44,21 +46,17 @@ export class CompanyController {
     @Post('login')
     async login(
         @Body() body: LoginCompanyDTO,
-        @Res({ passthrough: true })
-        res: Response,
+        @Res({ passthrough: true }) res: Response,
     ) {
         const tokens =
-            await this.companyService.login(
-                body,
-            );
+            await this.companyService.login(body);
 
         res.cookie(
             'access_token',
             tokens.accessToken,
             {
                 ...this.cookieOptions,
-                maxAge:
-                    1000 * 60 * 15,
+                maxAge: 1000 * 60 * 15,
             },
         );
 
@@ -86,9 +84,7 @@ export class CompanyController {
     findOne(
         @Param('id') id: string,
     ) {
-        return this.companyService.findOne(
-            id,
-        );
+        return this.companyService.findOne(id);
     }
 
     @Put(':id')

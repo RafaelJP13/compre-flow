@@ -65,16 +65,6 @@ export default function LoginForm() {
                 );
             }
 
-            localStorage.setItem(
-                "accessToken",
-                data.accessToken
-            );
-
-            localStorage.setItem(
-                "refreshToken",
-                data.refreshToken
-            );
-
             router.push("/dashboard");
         } catch (error) {
             console.error(error);

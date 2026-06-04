@@ -24,12 +24,11 @@ export class AuthController {
 
     private get cookieOptions() {
         return {
-            httpOnly: false,
-            secure: false,
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
             sameSite: 'lax' as const,
             path: '/',
-            domain: 'localhost',
-        };
+                    };
     }
 
     @Post('register')
@@ -70,7 +69,7 @@ export class AuthController {
             maxAge: 1000 * 60 * 60 * 24 * 7,
         });
 
-        return { message: 'Logged in successfully' };
+        return { message: 'Logged in successfully', accessToken: tokens.accessToken, refreshToken: tokens.refreshToken };
     }
 
     @Post('refresh')
@@ -94,6 +93,8 @@ export class AuthController {
                     sub: payload.sub,
                     email: payload.email,
                     role: payload.role,
+                    companyId: payload.companyId,
+                    type: payload.type,
                 },
                 {
                     secret: process.env.JWT_SECRET,
