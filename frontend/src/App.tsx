@@ -6,21 +6,35 @@ import { DashboardPage } from "./pages/DashboardPage";
 
 import CompanyPage from "./pages/internal/company/CompanyPage";
 import CreateCompanyPage from "./pages/internal/company/CreateCompanyPage";
-import UpdateCompanyPage from "./pages/internal/company/UpdateCompanyPage/index";
+import UpdateCompanyPage from "./pages/internal/company/UpdateCompanyPage";
 
 import { DashboardLayout } from "./layouts/DashboardLayout";
 
 import ProtectedRoute from "./components/auth/ProtectedRoute";
+import PublicRoute from "./components/auth/PublicRoute";
+
 import CompanyDetailsPage from "./pages/internal/company/CompanyDetails";
 
 export default function App() {
     return (
         <Routes>
-
             {/* PUBLIC */}
             <Route
+                path="/login"
+                element={
+                    <PublicRoute>
+                        <LoginPage />
+                    </PublicRoute>
+                }
+            />
+
+            <Route
                 path="/"
-                element={<LoginPage />}
+                element={
+                    <PublicRoute>
+                        <LoginPage />
+                    </PublicRoute>
+                }
             />
 
             {/* PROTECTED */}
@@ -31,7 +45,6 @@ export default function App() {
                     </ProtectedRoute>
                 }
             >
-
                 <Route
                     path="/dashboard"
                     element={<DashboardPage />}
@@ -46,17 +59,17 @@ export default function App() {
                     path="/companies/create"
                     element={<CreateCompanyPage />}
                 />
+
                 <Route
                     path="/companies/:id"
                     element={<CompanyDetailsPage />}
                 />
+
                 <Route
                     path="/companies/update/:id"
                     element={<UpdateCompanyPage />}
                 />
-
             </Route>
-
         </Routes>
     );
 }

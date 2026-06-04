@@ -1,5 +1,4 @@
 async function fetchWithRefresh(input: RequestInfo, init?: RequestInit): Promise<Response> {
-
     let res = await fetch(input, {
         ...init,
         credentials: "include",
@@ -12,11 +11,9 @@ async function fetchWithRefresh(input: RequestInfo, init?: RequestInit): Promise
         });
 
         if (!refreshRes.ok) {
-            window.location.href = "/";
             return res;
         }
 
-        // Retry original request with new cookie
         res = await fetch(input, {
             ...init,
             credentials: "include",
