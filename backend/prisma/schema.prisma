@@ -24,10 +24,12 @@ model Company {
   city          String
   address       String
 
-  users User[]
+  branches Branch[]
+  users    User[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  products  Product[]
 
   @@index([cnpj])
 }
@@ -74,6 +76,68 @@ model AuditLog {
   @@index([entity, entityId])
   @@index([action])
   @@index([createdAt])
+}
+
+model Branch {
+  id              String          @id @default(uuid())
+  companyId       String
+  company         Company         @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  name            String
+  code            String?
+  cnpj            String?         @unique
+  phone           String?
+  email           String?
+  manager         String?
+  cep             String?
+  state           String?
+  city            String?
+  neighborhood    String?
+  street          String?
+  number          String?
+  complement      String?
+  active          Boolean         @default(true)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  productBranches ProductBranch[]
+
+  @@index([companyId])
+}
+
+model ProductBranch {
+  id String @id @default(uuid())
+
+  productId    String
+  product      Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  branchId     String
+  branch       Branch   @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  quantity     Int      @default(0)
+  minimumStock Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@unique([productId, branchId])
+  @@index([productId])
+  @@index([branchId])
+}
+
+model Product {
+  id String @id @default(uuid())
+
+  companyId   String
+  company     Company         @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  sku         String
+  name        String
+  description String?
+  brand       String?
+  ean         String?
+  price       Decimal         @db.Decimal(10, 2)
+  active      Boolean         @default(true)
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  branches    ProductBranch[]
+
+  @@unique([companyId, sku])
+  @@index([companyId])
 }
 
 enum Role {
