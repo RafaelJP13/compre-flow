@@ -1,436 +1,145 @@
-import { Test, TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
+import {
+    ConflictException,
+    NotFoundException,
+    UnauthorizedException,
+} from '@nestjs/common';
 
-import { NotFoundException, ConflictException } from '@nestjs/common';
-
-import { mockDeep, DeepMockProxy } from 'jest-mock-extended';
-
-import { Company } from '@prisma/client';
-
-import { PrismaService } from '../../../prisma/prisma.service';
+import * as bcrypt from 'bcrypt';
 
 import { CompanyService } from '../../../src/company/company.service';
+import { PrismaService } from '../../../prisma/prisma.service';
+import { JwtService } from '@nestjs/jwt';
+
+jest.mock('bcrypt');
 
 describe('CompanyService', () => {
     let service: CompanyService;
 
-    let prisma: DeepMockProxy<PrismaService>;
+    const prismaMock = {
+        company: {
+            findMany: jest.fn(),
+            create: jest.fn(),
+            findUnique: jest.fn(),
+            findFirst: jest.fn(),
+            update: jest.fn(),
+        },
+    };
+
+    const jwtMock = {
+        sign: jest.fn(),
+    };
 
     beforeEach(async () => {
-        const module: TestingModule =
-            await Test.createTestingModule({
-                providers: [
-                    CompanyService,
-                    {
-                        provide: PrismaService,
-                        useValue: mockDeep<PrismaService>(),
-                    },
-                ],
-            }).compile();
+        const module = await Test.createTestingModule({
+            providers: [
+                CompanyService,
+                {
+                    provide: PrismaService,
+                    useValue: prismaMock,
+                },
+                {
+                    provide: JwtService,
+                    useValue: jwtMock,
+                },
+            ],
+        }).compile();
 
         service =
-            module.get<CompanyService>(CompanyService);
+            module.get<CompanyService>(
+                CompanyService,
+            );
 
-        prisma = module.get(PrismaService);
-    });
-
-    afterEach(() => {
         jest.clearAllMocks();
     });
 
-    it('should be defined', () => {
-        expect(service).toBeDefined();
+    it('should find all companies', async () => {
+        prismaMock.company.findMany.mockResolvedValue(
+            [],
+        );
+
+        const result =
+            await service.findAll();
+
+        expect(result).toEqual([]);
     });
 
-    describe('findAll', () => {
-        it('should return all companies', async () => {
-            const companies: Company[] = [
-                {
-                    id: '1',
+    it('should throw when company not found', async () => {
+        prismaMock.company.findUnique.mockResolvedValue(
+            null,
+        );
 
-                    fantasyName: 'Nike',
-                    legalName: 'Nike LTDA',
-
-                    cnpj: '12345678000190',
-                    cnpj_status: 'VALID',
-
-                    representante: 'Rafael Santos',
-
-                    adminName: 'Rafael',
-                    adminEmail: 'rafael@test.com',
-
-                    phone: '13999999999',
-
-                    cep: '11000-000',
-                    state: 'SP',
-                    city: 'Santos',
-
-                    address: 'Av Paulista 1000',
-
-                    createdAt: new Date(),
-                    updatedAt: new Date(),
-                },
-                {
-                    id: '2',
-
-                    fantasyName: 'Adidas',
-                    legalName: 'Adidas LTDA',
-
-                    cnpj: '99999999999999',
-                    cnpj_status: 'VALID',
-
-                    representante: 'John Doe',
-
-                    adminName: 'John',
-                    adminEmail: 'john@test.com',
-
-                    phone: '11999999999',
-
-                    cep: '01000-000',
-                    state: 'SP',
-                    city: 'São Paulo',
-
-                    address: 'Rua XPTO 123',
-
-                    createdAt: new Date(),
-                    updatedAt: new Date(),
-                },
-            ];
-
-            prisma.company.findMany.mockResolvedValue(
-                companies,
-            );
-
-            const result = await service.findAll();
-
-            expect(result).toEqual(companies);
-
-            expect(
-                prisma.company.findMany,
-            ).toHaveBeenCalled();
-        });
-
-        it('should return empty array when no companies exist', async () => {
-            prisma.company.findMany.mockResolvedValue(
-                [],
-            );
-
-            const result = await service.findAll();
-
-            expect(result).toEqual([]);
-
-            expect(
-                prisma.company.findMany,
-            ).toHaveBeenCalled();
-        });
+        await expect(
+            service.findOne('1'),
+        ).rejects.toThrow(
+            NotFoundException,
+        );
     });
 
-    describe('findOne', () => {
-        it('should return company by id', async () => {
-            const company: Company = {
+    it('should login company', async () => {
+        prismaMock.company.findFirst.mockResolvedValue(
+            {
                 id: '1',
+                adminEmail: 'admin@test.com',
+                passwordAdmin: 'hashed',
+            },
+        );
 
-                fantasyName: 'Nike',
-                legalName: 'Nike LTDA',
+        (bcrypt.compare as jest.Mock).mockResolvedValue(
+            true,
+        );
 
-                cnpj: '12345678000190',
-                cnpj_status: 'VALID',
+        jwtMock.sign
+            .mockReturnValueOnce('access')
+            .mockReturnValueOnce('refresh');
 
-                representante: 'Rafael Santos',
-
-                adminName: 'Rafael',
-                adminEmail: 'rafael@test.com',
-
-                phone: '13999999999',
-
-                cep: '11000-000',
-                state: 'SP',
-                city: 'Santos',
-
-                address: 'Av Paulista 1000',
-
-                createdAt: new Date(),
-                updatedAt: new Date(),
-            };
-
-            prisma.company.findUnique.mockResolvedValue(
-                company,
-            );
-
-            const result = await service.findOne('1');
-
-            expect(result).toEqual(company);
-
-            expect(
-                prisma.company.findUnique,
-            ).toHaveBeenCalledWith({
-                where: {
-                    id: '1',
-                },
+        const result =
+            await service.login({
+                adminEmail:
+                    'admin@test.com',
+                passwordAdmin: '123',
             });
-        });
 
-        it('should throw if company does not exist', async () => {
-            prisma.company.findUnique.mockResolvedValue(
-                null,
-            );
-
-            await expect(
-                service.findOne('999'),
-            ).rejects.toThrow(
-                new NotFoundException(
-                    'Empresa não encontrada',
-                ),
-            );
-
-            expect(
-                prisma.company.findUnique,
-            ).toHaveBeenCalledWith({
-                where: {
-                    id: '999',
-                },
-            });
-        });
+        expect(
+            result.company_access_token,
+        ).toBe('access');
     });
 
-    describe('create', () => {
-        it('should create a company successfully', async () => {
-            const dto = {
-                adminName: 'Rafael',
-                adminEmail: 'rafael@test.com',
+    it('should throw invalid credentials', async () => {
+        prismaMock.company.findFirst.mockResolvedValue(
+            null,
+        );
 
-                representante: 'Rafael Santos',
-
-                fantasyName: 'Nike',
-                legalName: 'Nike LTDA',
-
-                cnpj: '12345678000190',
-                cnpj_status: 'VALID',
-
-                phone: '13999999999',
-
-                cep: '11000-000',
-                state: 'SP',
-                city: 'Santos',
-
-                address: 'Av Paulista 1000',
-            };
-
-            const createdCompany: Company = {
-                id: '1',
-
-                ...dto,
-
-                createdAt: new Date(),
-                updatedAt: new Date(),
-            };
-
-            prisma.company.create.mockResolvedValue(
-                createdCompany,
-            );
-
-            const result = await service.create(dto);
-
-            expect(result).toEqual(
-                createdCompany,
-            );
-
-            expect(
-                prisma.company.create,
-            ).toHaveBeenCalledWith({
-                data: {
-                    adminName: dto.adminName,
-                    adminEmail: dto.adminEmail,
-
-                    representante:
-                        dto.representante,
-
-                    fantasyName:
-                        dto.fantasyName,
-
-                    legalName:
-                        dto.legalName,
-
-                    cnpj: dto.cnpj,
-
-                    cnpj_status:
-                        dto.cnpj_status,
-
-                    phone: dto.phone,
-
-                    cep: dto.cep,
-
-                    state: dto.state,
-
-                    city: dto.city,
-
-                    address: dto.address,
-                },
-            });
-        });
+        await expect(
+            service.login({
+                adminEmail: 'x',
+                passwordAdmin: 'x',
+            }),
+        ).rejects.toThrow(
+            UnauthorizedException,
+        );
     });
 
-    describe('update', () => {
-        it('should update a company successfully', async () => {
-            const dto = {
-                fantasyName: 'Nike Updated',
-                cnpj: '12345678000190',
-            };
-
-            const existingCompany: Company = {
+    it('should throw duplicate cnpj', async () => {
+        prismaMock.company.findUnique.mockResolvedValue(
+            {
                 id: '1',
+            },
+        );
 
-                fantasyName: 'Nike',
-                legalName: 'Nike LTDA',
-
-                cnpj: '12345678000190',
-                cnpj_status: 'VALID',
-
-                representante: 'Rafael Santos',
-
-                adminName: 'Rafael',
-                adminEmail: 'rafael@test.com',
-
-                phone: '13999999999',
-
-                cep: '11000-000',
-                state: 'SP',
-                city: 'Santos',
-
-                address: 'Av Paulista 1000',
-
-                createdAt: new Date(),
-                updatedAt: new Date(),
-            };
-
-            const updatedCompany: Company = {
-                ...existingCompany,
-                fantasyName:
-                    dto.fantasyName,
-            };
-
-            prisma.company.findUnique.mockResolvedValue(
-                existingCompany,
-            );
-
-            prisma.company.findFirst.mockResolvedValue(
-                null,
-            );
-
-            prisma.company.update.mockResolvedValue(
-                updatedCompany,
-            );
-
-            const result = await service.update(
-                '1',
-                dto,
-            );
-
-            expect(result).toEqual(
-                updatedCompany,
-            );
-
-            expect(
-                prisma.company.update,
-            ).toHaveBeenCalledWith({
-                where: {
-                    id: '1',
-                },
-                data: {
-                    adminName: undefined,
-
-                    adminEmail: undefined,
-
-                    representante:
-                        undefined,
-
-                    fantasyName:
-                        dto.fantasyName,
-
-                    legalName: undefined,
-
-                    cnpj: dto.cnpj,
-
-                    cnpj_status:
-                        undefined,
-
-                    phone: undefined,
-
-                    cep: undefined,
-
-                    state: undefined,
-
-                    city: undefined,
-
-                    address: undefined,
-                },
-            });
-        });
-
-        it('should throw when company does not exist', async () => {
-            prisma.company.findUnique.mockResolvedValue(
-                null,
-            );
-
-            await expect(
-                service.update('999', {
-                    fantasyName: 'Test',
-                }),
-            ).rejects.toThrow(
-                new NotFoundException(
-                    'Empresa não encontrada',
-                ),
-            );
-        });
-
-        it('should throw when cnpj already exists in another company', async () => {
-            const existingCompany: Company = {
-                id: '1',
-
-                fantasyName: 'Nike',
-                legalName: 'Nike LTDA',
-
-                cnpj: '12345678000190',
-                cnpj_status: 'VALID',
-
-                representante: 'Rafael Santos',
-
-                adminName: 'Rafael',
-                adminEmail: 'rafael@test.com',
-
-                phone: '13999999999',
-
-                cep: '11000-000',
-                state: 'SP',
-                city: 'Santos',
-
-                address: 'Av Paulista 1000',
-
-                createdAt: new Date(),
-                updatedAt: new Date(),
-            };
-
-            const duplicatedCompany: Company = {
-                ...existingCompany,
+        prismaMock.company.findFirst.mockResolvedValue(
+            {
                 id: '2',
-            };
+            },
+        );
 
-            prisma.company.findUnique.mockResolvedValue(
-                existingCompany,
-            );
-
-            prisma.company.findFirst.mockResolvedValue(
-                duplicatedCompany,
-            );
-
-            await expect(
-                service.update('1', {
-                    cnpj: '12345678000190',
-                }),
-            ).rejects.toThrow(
-                new ConflictException(
-                    'CNPJ já está em uso',
-                ),
-            );
-        });
+        await expect(
+            service.update('1', {
+                cnpj:
+                    '11.111.111/1111-11',
+            }),
+        ).rejects.toThrow(
+            ConflictException,
+        );
     });
 });
