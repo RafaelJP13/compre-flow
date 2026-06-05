@@ -1,6 +1,6 @@
 ## CompreFlow 🛒
 
-A modern Retail Execution + Pricing Intelligence + Sales Intelligence platform built with React.js, React Native and NestJS is a multi-tenant B2B SaaS solution built for companies that need to centralize, automate, and scale their operations with security, reliability, and high performance. Inspired by enterprise-grade infrastructures, the platform delivers a complete ecosystem for business management, operational monitoring, and real-time strategic insights.
+A modern Retail Execution + Pricing Intelligence + Sales Intelligence platform built with React.js, Next.js, React Native and NestJS is a multi-tenant B2B SaaS solution built for companies that need to centralize, automate, and scale their operations with security, reliability, and high performance. Inspired by enterprise-grade infrastructures, the platform delivers a complete ecosystem for business management, operational monitoring, and real-time strategic insights.
 
 The solution enables employees to register purchases, sales, and operational activities directly through the mobile application, instantly sending all data to the management dashboard. This provides business leaders with a unified, real-time view of operations, performance metrics, and company activities from anywhere.
 
