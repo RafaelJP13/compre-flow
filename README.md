@@ -133,7 +133,7 @@ docker compose up --build
 
 ---
 
-## 👤 Default User (Seed)
+## 👤 Default User && Company Admin(Seed)
 
 After running the docker compose, a default user will be created for testing purposes:
 
