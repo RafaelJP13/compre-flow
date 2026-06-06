@@ -13,23 +13,28 @@ model Company {
   adminName     String
   adminEmail    String
   passwordAdmin String
+
   representante String
   fantasyName   String
   legalName     String
-  cnpj          String @unique
-  cnpj_status   String // "VALID", "INVALID"
-  phone         String
-  cep           String
-  state         String
-  city          String
-  address       String
 
-  branches Branch[]
+  cnpj        String @unique
+  cnpj_status String
+
+  phone   String
+  cep     String
+  state   String
+  city    String
+  address String
+
   users    User[]
+  branches Branch[]
+  products Product[]
 
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  products  Product[]
+  companyRolePermissions CompanyRolePermission[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([cnpj])
 }
@@ -41,16 +46,144 @@ model User {
   email    String @unique
   password String
 
-  role Role @default(EMPLOYEE)
-
   companyId String?
   company   Company? @relation(fields: [companyId], references: [id], onDelete: SetNull)
+
+  roleId String
+  role   Role   @relation(fields: [roleId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([companyId])
-  @@index([role])
+  @@index([roleId])
+}
+
+model Role {
+  id String @id @default(uuid())
+
+  name        String  @unique
+  description String?
+
+  users User[]
+
+  companyPermissions CompanyRolePermission[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("roles")
+}
+
+model Permission {
+  id String @id @default(uuid())
+
+  module      String
+  name        String  @unique
+  description String?
+
+  companyPermissions CompanyRolePermission[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("permissions")
+}
+
+model CompanyRolePermission {
+  companyId    String
+  roleId       String
+  permissionId String
+
+  company    Company    @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  role       Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@id([companyId, roleId, permissionId])
+  @@index([companyId])
+  @@index([roleId])
+  @@index([permissionId])
+}
+
+model Branch {
+  id String @id @default(uuid())
+
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  name String
+  code String?
+
+  cnpj  String? @unique
+  phone String?
+  email String? @unique
+
+  manager String?
+
+  cep          String?
+  state        String?
+  city         String?
+  neighborhood String?
+  street       String?
+  number       String?
+  complement   String?
+
+  active Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  productBranches ProductBranch[]
+
+  @@index([companyId])
+}
+
+model Product {
+  id String @id @default(uuid())
+
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  sku  String
+  name String
+
+  description String?
+  brand       String?
+  ean         String?
+
+  price Decimal @db.Decimal(10, 2)
+
+  active Boolean @default(true)
+
+  branches ProductBranch[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([companyId, sku])
+  @@index([companyId])
+}
+
+model ProductBranch {
+  id String @id @default(uuid())
+
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  branchId String
+  branch   Branch @relation(fields: [branchId], references: [id], onDelete: Cascade)
+
+  quantity     Int @default(0)
+  minimumStock Int @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([productId, branchId])
+  @@index([productId])
+  @@index([branchId])
 }
 
 model AuditLog {
@@ -59,15 +192,19 @@ model AuditLog {
   userId    String?
   userEmail String?
   companyId String?
-  action    String // e.g. "USER_CREATED", "ORDER_UPDATED"
-  entity    String // e.g. "User", "Order", "Product"
-  entityId  String?
-  metadata  Json? // flexible payload (before/after, extra info)
+
+  action   String
+  entity   String
+  entityId String?
+
+  metadata Json?
+
   ip        String?
   userAgent String?
   requestId String?
-  status    String // "SUCCESS" | "FAILURE"
-  error     String?
+
+  status String
+  error  String?
 
   createdAt DateTime @default(now())
 
@@ -76,72 +213,4 @@ model AuditLog {
   @@index([entity, entityId])
   @@index([action])
   @@index([createdAt])
-}
-
-model Branch {
-  id              String          @id @default(uuid())
-  companyId       String
-  company         Company         @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  name            String
-  code            String?
-  cnpj            String?         @unique
-  phone           String?
-  email           String?
-  manager         String?
-  cep             String?
-  state           String?
-  city            String?
-  neighborhood    String?
-  street          String?
-  number          String?
-  complement      String?
-  active          Boolean         @default(true)
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
-  productBranches ProductBranch[]
-
-  @@index([companyId])
-}
-
-model ProductBranch {
-  id String @id @default(uuid())
-
-  productId    String
-  product      Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  branchId     String
-  branch       Branch   @relation(fields: [branchId], references: [id], onDelete: Cascade)
-  quantity     Int      @default(0)
-  minimumStock Int      @default(0)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  @@unique([productId, branchId])
-  @@index([productId])
-  @@index([branchId])
-}
-
-model Product {
-  id String @id @default(uuid())
-
-  companyId   String
-  company     Company         @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  sku         String
-  name        String
-  description String?
-  brand       String?
-  ean         String?
-  price       Decimal         @db.Decimal(10, 2)
-  active      Boolean         @default(true)
-  createdAt   DateTime        @default(now())
-  updatedAt   DateTime        @updatedAt
-  branches    ProductBranch[]
-
-  @@unique([companyId, sku])
-  @@index([companyId])
-}
-
-enum Role {
-  OWNER
-  COMPANY_ADMIN
-  EMPLOYEE
 }
