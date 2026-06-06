@@ -143,6 +143,12 @@ After running the docker compose, a default user will be created for testing pur
   "email": "owner@test.com",
   "password": "123456"
 }
+
+{
+  "name": "Demo Company",
+  "email": "admin@company.com",
+  "password": "123456"
+}
 ```
 
 ---
