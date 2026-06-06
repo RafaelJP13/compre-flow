@@ -28,6 +28,7 @@ The project aims to simulate a modern Pricing and Salesforce experience with:
 - GraphQL integration
 - Modular backend architecture
 - Modern frontend
+- Multi-tenant RBAC
 
 This repository contains both frontend( Web | Mobile) and backend applications.
 
