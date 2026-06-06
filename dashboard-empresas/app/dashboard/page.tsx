@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Menu, X } from 'lucide-react';
+import Link from "next/link";
 
 export default function Dashboard() {
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -66,9 +67,13 @@ export default function Dashboard() {
 
                     {/* Navigation */}
                     <nav className="space-y-3">
-                        <SidebarItem label="Produtos" active />
-                        <SidebarItem label="Colaboradores" />
-                        <SidebarItem label="Vendas" />
+                        <nav className="space-y-3">
+                            <SidebarItem
+                                label="Produtos"
+                                href="/dashboard/produtos"
+                                active
+                            />
+                        </nav>
                     </nav>
                 </div>
 
@@ -301,9 +306,18 @@ export default function Dashboard() {
     );
 }
 
-function SidebarItem({ label, active = false }) {
+function SidebarItem({
+    label,
+    href,
+    active = false,
+}: {
+    label: string;
+    href: string;
+    active?: boolean;
+}) {
     return (
-        <button
+        <Link
+            href={href}
             className={`
         w-full flex items-center justify-between
         px-5 py-4 rounded-2xl
@@ -314,14 +328,13 @@ function SidebarItem({ label, active = false }) {
         hover:shadow-white/10
         hover:-translate-y-0.5
         ${active
-                    ? 'bg-white text-black font-semibold'
-                    : 'bg-white/5 hover:bg-white/10 text-white'
+                    ? "bg-white text-black font-semibold"
+                    : "bg-white/5 hover:bg-white/10 text-white"
                 }
       `}
         >
             <span>{label}</span>
-
             <span>→</span>
-        </button>
+        </Link>
     );
 }
