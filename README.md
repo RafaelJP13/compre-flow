@@ -28,6 +28,7 @@ The project aims to simulate a modern Pricing and Salesforce experience with:
 - GraphQL integration
 - Modular backend architecture
 - Modern frontend
+- Multi-tenant RBAC
 
 This repository contains both frontend( Web | Mobile) and backend applications.
 
@@ -149,7 +150,7 @@ http://localhost:5173
 - [x] Unit Tests
 - [x] Snyk to scan the dependencies
 - [x] Company Dashboard with Next.js
-- [ ] Permission-Based Access Control (PBAC)
+- [ ] Multi-tenant RBAC
 - [ ] UI Componentization
 - [ ] Company Dashboard
 - [ ] GraphQL for dashboards, aggregations, complex frontend querying
