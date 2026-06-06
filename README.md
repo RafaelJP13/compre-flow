@@ -34,6 +34,30 @@ This repository contains both frontend( Web | Mobile) and backend applications.
 
 ---
 
+# 📌 Features
+
+- [x] NestJS backend initialization
+- [x] Frontend with React.js
+- [x] Login & Logout
+- [x] Admin Dashboard
+- [x] Authentication with JWT in HttpOnly cookies 
+- [x] Unit Tests
+- [x] CI & CD
+- [x] Add React Router
+- [x] REST API for crud
+- [x] Unit Tests
+- [x] Snyk to scan the dependencies
+- [x] Company Dashboard with Next.js
+- [x] Multi-tenant RBAC
+- [ ] UI Componentization
+- [ ] Company Dashboard
+- [ ] GraphQL for dashboards, aggregations, complex frontend querying
+- [ ] Company crud
+- [ ] Employers Company crud 
+- [ ] Internal users crud
+
+---
+
 # 🧰 Technologies
 
 ## Frontend
@@ -133,31 +157,6 @@ Frontend will run on:
 ```bash
 http://localhost:5173
 ```
-
----
-
-# 📌 Features
-
-- [x] NestJS backend initialization
-- [x] Frontend with React.js
-- [x] Login & Logout
-- [x] Admin Dashboard
-- [x] Authentication with JWT in HttpOnly cookies 
-- [x] Unit Tests
-- [x] CI & CD
-- [x] Add React Router
-- [x] REST API for crud
-- [x] Unit Tests
-- [x] Snyk to scan the dependencies
-- [x] Company Dashboard with Next.js
-- [x] Multi-tenant RBAC
-- [ ] UI Componentization
-- [ ] Company Dashboard
-- [ ] GraphQL for dashboards, aggregations, complex frontend querying
-- [ ] Company crud
-- [ ] Employers Company crud 
-- [ ] Internal users crud
-
 
 ---
 
