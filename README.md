@@ -150,7 +150,7 @@ http://localhost:5173
 - [x] Unit Tests
 - [x] Snyk to scan the dependencies
 - [x] Company Dashboard with Next.js
-- [ ] Permission-Based Access Control (PBAC)
+- [ ] Multi-tenant RBAC
 - [ ] UI Componentization
 - [ ] Company Dashboard
 - [ ] GraphQL for dashboards, aggregations, complex frontend querying
