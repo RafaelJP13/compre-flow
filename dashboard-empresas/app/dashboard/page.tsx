@@ -69,8 +69,8 @@ export default function Dashboard() {
                     <nav className="space-y-3">
                         <nav className="space-y-3">
                             <SidebarItem
-                                label="Produtos"
-                                href="/dashboard/produtos"
+                                label="Colaboradores"
+                                href="/dashboard/colaboradores"
                                 active
                             />
                         </nav>
