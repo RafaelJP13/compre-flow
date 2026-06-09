@@ -34,6 +34,30 @@ This repository contains both frontend( Web | Mobile) and backend applications.
 
 ---
 
+# 📌 Features
+
+- [x] NestJS backend initialization
+- [x] Frontend with React.js
+- [x] Login & Logout
+- [x] Admin Dashboard
+- [x] Authentication with JWT in HttpOnly cookies 
+- [x] Unit Tests
+- [x] CI & CD
+- [x] Add React Router
+- [x] REST API for crud
+- [x] Unit Tests
+- [x] Snyk to scan the dependencies
+- [x] Company Dashboard with Next.js
+- [x] Multi-tenant RBAC
+- [ ] UI Componentization
+- [ ] Company Dashboard
+- [ ] GraphQL for dashboards, aggregations, complex frontend querying
+- [ ] Company crud
+- [ ] Employers Company crud 
+- [ ] Internal users crud
+
+---
+
 # 🧰 Technologies
 
 ## Frontend
@@ -109,7 +133,7 @@ docker compose up --build
 
 ---
 
-## 👤 Default User (Seed)
+## 👤 Default User && Company Admin(Seed)
 
 After running the docker compose, a default user will be created for testing purposes:
 
@@ -117,6 +141,12 @@ After running the docker compose, a default user will be created for testing pur
 {
   "name": "Platform Owner",
   "email": "owner@test.com",
+  "password": "123456"
+}
+
+{
+  "name": "Demo Company",
+  "email": "admin@company.com",
   "password": "123456"
 }
 ```
@@ -133,31 +163,6 @@ Frontend will run on:
 ```bash
 http://localhost:5173
 ```
-
----
-
-# 📌 Features
-
-- [x] NestJS backend initialization
-- [x] Frontend with React.js
-- [x] Login & Logout
-- [x] Admin Dashboard
-- [x] Authentication with JWT in HttpOnly cookies 
-- [x] Unit Tests
-- [x] CI & CD
-- [x] Add React Router
-- [x] REST API for crud
-- [x] Unit Tests
-- [x] Snyk to scan the dependencies
-- [x] Company Dashboard with Next.js
-- [ ] Multi-tenant RBAC
-- [ ] UI Componentization
-- [ ] Company Dashboard
-- [ ] GraphQL for dashboards, aggregations, complex frontend querying
-- [ ] Company crud
-- [ ] Employers Company crud 
-- [ ] Internal users crud
-
 
 ---
 
