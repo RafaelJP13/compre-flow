@@ -7,14 +7,18 @@ import { MaskedIconField } from "../fields/MaskedIconField";
 import { CnpjStatusIndicator } from "../fields/CnpjStatusIndicator";
 import { SectionHeading } from "./SectionHeading";
 
-import type { CnpjStatus, CreateCompanyFormData } from "../../types";
+import type { CnpjStatus, CompanyBaseFormData } from "../types";
 
 type Props = {
-    formData: CreateCompanyFormData;
+    formData: CompanyBaseFormData & { passwordAdmin?: string };
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     onDocumentChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     loadingCNPJ: boolean;
     cnpjStatus: CnpjStatus;
+    /** Only relevant when creating a new company (a new admin login is created together with it). */
+    showPasswordField?: boolean;
+    /** The admin e-mail can't be changed once the company already exists. */
+    disableEmailField?: boolean;
 };
 
 export function CompanyInfoSection({
@@ -23,9 +27,11 @@ export function CompanyInfoSection({
     onDocumentChange,
     loadingCNPJ,
     cnpjStatus,
+    showPasswordField = false,
+    disableEmailField = false,
 }: Props) {
     return (
-        <div className="mb-10">
+        <div>
             <SectionHeading
                 icon={Building2}
                 title="Informações da Empresa"
@@ -49,17 +55,20 @@ export function CompanyInfoSection({
                     onChange={onChange}
                     placeholder="admin@empresa.com"
                     icon={Mail}
+                    disabled={disableEmailField}
                 />
 
-                <IconTextField
-                    label="Senha"
-                    name="passwordAdmin"
-                    type="password"
-                    value={formData.passwordAdmin}
-                    onChange={onChange}
-                    placeholder="••••••••"
-                    icon={Mail}
-                />
+                {showPasswordField && (
+                    <IconTextField
+                        label="Senha"
+                        name="passwordAdmin"
+                        type="password"
+                        value={formData.passwordAdmin ?? ""}
+                        onChange={onChange}
+                        placeholder="••••••••"
+                        icon={Mail}
+                    />
+                )}
 
                 <MaskedIconField
                     label="CNPJ"

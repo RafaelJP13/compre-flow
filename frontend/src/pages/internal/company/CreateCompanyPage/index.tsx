@@ -1,8 +1,8 @@
-import { CreateCompanyHeader } from "./components/CreateCompanyHeader";
-import { CreateCompanyFormShell } from "./components/CreateCompanyFormShell";
-import { CompanyInfoSection } from "./components/sections/CompanyInfoSection";
-import { AddressSection } from "./components/sections/AddressSection";
-import { ActionsSection } from "./components/sections/ActionsSection";
+import { FormHeader } from "../components/form/FormHeader";
+import { FormShell } from "../components/form/FormShell";
+import { CompanyInfoSection } from "../components/form/sections/CompanyInfoSection";
+import { AddressSection } from "../components/form/sections/AddressSection";
+import { ActionsSection } from "../components/form/sections/ActionsSection";
 
 import { useCreateCompanyForm } from "./hooks/useCreateCompanyForm";
 
@@ -19,15 +19,19 @@ export default function CreateCompanyPage() {
 
     return (
         <div className="p-6 w-full bg-gray-50 min-h-screen">
-            <CreateCompanyHeader />
+            <FormHeader
+                title="Adicionar Empresa"
+                subtitle="Cadastre uma nova empresa na plataforma"
+            />
 
-            <CreateCompanyFormShell onSubmit={handleSubmit}>
+            <FormShell onSubmit={handleSubmit}>
                 <CompanyInfoSection
                     formData={formData}
                     onChange={handleChange}
                     onDocumentChange={handleDocumentChange}
                     loadingCNPJ={loadingCNPJ}
                     cnpjStatus={cnpjStatus}
+                    showPasswordField
                 />
 
                 <AddressSection
@@ -35,8 +39,12 @@ export default function CreateCompanyPage() {
                     onChange={handleChange}
                 />
 
-                <ActionsSection loading={loading} />
-            </CreateCompanyFormShell>
+                <ActionsSection
+                    loading={loading}
+                    submitText="Salvar Empresa"
+                    loadingText="Salvando..."
+                />
+            </FormShell>
         </div>
     );
 }

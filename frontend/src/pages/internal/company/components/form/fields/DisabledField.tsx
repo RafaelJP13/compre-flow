@@ -1,45 +1,39 @@
-import { InputMask } from "@react-input/mask";
-
 type Props = {
     label: string;
     name: string;
     value: string;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     placeholder?: string;
-    mask: string;
+    className?: string;
 };
 
-export function MaskedField({
+export function DisabledField({
     label,
     name,
     value,
-    onChange,
     placeholder,
-    mask,
+    className,
 }: Props) {
     return (
-        <div>
+        <div className={className}>
             <label className="block text-sm font-medium text-gray-700 mb-2">
                 {label}
             </label>
 
-            <InputMask
-                mask={mask}
-                replacement={{ _: /\d/ }}
+            <input
                 type="text"
                 name={name}
                 value={value}
-                onChange={onChange}
+                disabled
                 placeholder={placeholder}
                 className="
                     w-full
                     px-4 py-3
                     rounded-2xl
                     border border-gray-200
+                    bg-gray-100
+                    text-gray-500
+                    cursor-not-allowed
                     outline-none
-                    focus:ring-4
-                    focus:ring-[#ffac2e]/20
-                    focus:border-[#ffac2e]
                 "
             />
         </div>

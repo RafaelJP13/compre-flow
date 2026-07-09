@@ -11,6 +11,7 @@ type Props = {
     mask: string;
     icon: LucideIcon;
     rightSlot?: ReactNode;
+    className?: string;
 };
 
 export function MaskedIconField({
@@ -22,6 +23,7 @@ export function MaskedIconField({
     mask,
     icon: Icon,
     rightSlot,
+    className,
 }: Props) {
     const inputClassName = rightSlot
         ? `
@@ -52,7 +54,7 @@ export function MaskedIconField({
         `;
 
     return (
-        <div>
+        <div className={className}>
             <label className="block text-sm font-medium text-gray-700 mb-2">
                 {label}
             </label>

@@ -1,33 +1,35 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 
 import fetchWithRefresh from "../../../../../services/api";
 import {
-    emptyCreateCompanyFormData,
+    emptyUpdateCompanyFormData,
     type BrasilApiResponse,
     type CnpjStatus,
-    type CreateCompanyFormData,
+    type UpdateCompanyFormData,
 } from "../../components/form/types";
 
-export function useCreateCompanyForm() {
+export function useUpdateCompanyForm(id: string | undefined) {
+    const navigate = useNavigate();
+
     const [loading, setLoading] = useState(false);
+    const [loadingPage, setLoadingPage] = useState(true);
     const [loadingCNPJ, setLoadingCNPJ] = useState(false);
 
     const [cnpjStatus, setCnpjStatus] = useState<CnpjStatus>("idle");
 
-    const navigate = useNavigate();
-    const [formData, setFormData] = useState<CreateCompanyFormData>(
-        emptyCreateCompanyFormData
+    const [formData, setFormData] = useState<UpdateCompanyFormData>(
+        emptyUpdateCompanyFormData
     );
 
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement>
     ) => {
-        setFormData({
-            ...formData,
+        setFormData((prev) => ({
+            ...prev,
             [e.target.name]: e.target.value,
-        });
+        }));
     };
 
     const fetchCNPJ = async (cnpj: string) => {
@@ -59,9 +61,7 @@ export function useCreateCompanyForm() {
 
                 cep: data.cep || "",
 
-                adminEmail: data.email || "",
-                passwordAdmin: "",
-                phone: data.ddd_telefone_1 || "",
+                phone: data.ddd_telefone_1 || prev.phone,
 
                 address: `${data.logradouro || ""}, ${
                     data.numero || ""
@@ -87,10 +87,10 @@ export function useCreateCompanyForm() {
     ) => {
         const value = e.target.value;
 
-        setFormData({
-            ...formData,
+        setFormData((prev) => ({
+            ...prev,
             cnpj: value,
-        });
+        }));
 
         const cleaned = value.replace(/\D/g, "");
 
@@ -101,6 +101,51 @@ export function useCreateCompanyForm() {
         }
     };
 
+    const fetchCompany = async () => {
+        try {
+            setLoadingPage(true);
+
+            const response = await fetchWithRefresh(
+                `http://localhost:3000/companies/${id}`
+            );
+
+            if (!response.ok) {
+                throw new Error("Erro ao buscar empresa");
+            }
+
+            const data = await response.json();
+
+            setFormData({
+                adminName: data.adminName || "",
+                adminEmail: data.adminEmail || "",
+
+                representante: data.representante || "",
+
+                fantasyName: data.fantasyName || "",
+                legalName: data.legalName || "",
+
+                cnpj: data.cnpj || "",
+                cnpj_status: data.cnpj_status || "",
+
+                phone: data.phone || "",
+
+                cep: data.cep || "",
+                state: data.state || "",
+                city: data.city || "",
+
+                address: data.address || "",
+            });
+
+            setCnpjStatus(data.cnpj_status ? "success" : "idle");
+        } catch (error) {
+            toast.error("Erro ao carregar empresa");
+
+            navigate("/companies");
+        } finally {
+            setLoadingPage(false);
+        }
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -108,9 +153,9 @@ export function useCreateCompanyForm() {
             setLoading(true);
 
             const response = await fetchWithRefresh(
-                "http://localhost:3000/companies",
+                `http://localhost:3000/companies/${id}`,
                 {
-                    method: "POST",
+                    method: "PUT",
                     headers: {
                         "Content-Type": "application/json",
                     },
@@ -119,31 +164,29 @@ export function useCreateCompanyForm() {
             );
 
             if (!response.ok) {
-                throw new Error("Failed to create company");
+                throw new Error("Erro ao atualizar empresa");
             }
 
-            await response.json();
-
-            toast.success("Empresa criada com sucesso!");
+            toast.success("Empresa atualizada com sucesso!");
 
             setTimeout(() => {
                 navigate("/companies");
             }, 1200);
-
-            setFormData(emptyCreateCompanyFormData);
-
-            setCnpjStatus("idle");
         } catch (error) {
-            console.error(error);
-
-            toast.error("Erro ao criar empresa!");
+            toast.error("Erro ao atualizar empresa");
         } finally {
             setLoading(false);
         }
     };
 
+    useEffect(() => {
+        fetchCompany();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [id]);
+
     return {
         loading,
+        loadingPage,
         loadingCNPJ,
         cnpjStatus,
         formData,

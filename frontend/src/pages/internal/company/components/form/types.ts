@@ -1,7 +1,8 @@
-export type CreateCompanyFormData = {
+export type CnpjStatus = "idle" | "success" | "error";
+
+export type CompanyBaseFormData = {
     adminName: string;
     adminEmail: string;
-    passwordAdmin: string;
 
     representante: string;
 
@@ -20,7 +21,11 @@ export type CreateCompanyFormData = {
     address: string;
 };
 
-export type CnpjStatus = "idle" | "success" | "error";
+export type CreateCompanyFormData = CompanyBaseFormData & {
+    passwordAdmin: string;
+};
+
+export type UpdateCompanyFormData = CompanyBaseFormData;
 
 export type BrasilApiResponse = {
     razao_social: string;
@@ -40,6 +45,27 @@ export const emptyCreateCompanyFormData: CreateCompanyFormData = {
     adminName: "",
     adminEmail: "",
     passwordAdmin: "",
+
+    representante: "",
+
+    fantasyName: "",
+    legalName: "",
+
+    cnpj: "",
+    cnpj_status: "",
+
+    phone: "",
+
+    cep: "",
+    state: "",
+    city: "",
+
+    address: "",
+};
+
+export const emptyUpdateCompanyFormData: UpdateCompanyFormData = {
+    adminName: "",
+    adminEmail: "",
 
     representante: "",
 

@@ -8,6 +8,8 @@ type Props = {
     placeholder?: string;
     type?: string;
     icon: LucideIcon;
+    className?: string;
+    disabled?: boolean;
 };
 
 export function IconTextField({
@@ -18,9 +20,11 @@ export function IconTextField({
     placeholder,
     type = "text",
     icon: Icon,
+    className,
+    disabled,
 }: Props) {
     return (
-        <div>
+        <div className={className}>
             <label className="block text-sm font-medium text-gray-700 mb-2">
                 {label}
             </label>
@@ -43,6 +47,7 @@ export function IconTextField({
                     value={value}
                     onChange={onChange}
                     placeholder={placeholder}
+                    disabled={disabled}
                     className="
                         w-full
                         pl-12
@@ -54,6 +59,9 @@ export function IconTextField({
                         focus:ring-4
                         focus:ring-[#ffac2e]/20
                         focus:border-[#ffac2e]
+                        disabled:bg-gray-100
+                        disabled:text-gray-500
+                        disabled:cursor-not-allowed
                     "
                 />
             </div>

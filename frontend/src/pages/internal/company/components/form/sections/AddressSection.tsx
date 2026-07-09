@@ -4,10 +4,10 @@ import { TextField } from "../fields/TextField";
 import { MaskedField } from "../fields/MaskedField";
 import { SectionHeading } from "./SectionHeading";
 
-import type { CreateCompanyFormData } from "../../types";
+import type { CompanyBaseFormData } from "../types";
 
 type Props = {
-    formData: CreateCompanyFormData;
+    formData: CompanyBaseFormData;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
@@ -39,20 +39,20 @@ export function AddressSection({ formData, onChange }: Props) {
                 />
 
                 <TextField
+                    label="Cidade"
+                    name="city"
+                    value={formData.city}
+                    onChange={onChange}
+                    placeholder="São Paulo"
+                />
+
+                <TextField
                     label="Endereço"
                     name="address"
                     value={formData.address}
                     onChange={onChange}
                     placeholder="Rua, número e bairro"
                     className="md:col-span-2"
-                />
-
-                <TextField
-                    label="Cidade"
-                    name="city"
-                    value={formData.city}
-                    onChange={onChange}
-                    placeholder="São Paulo"
                 />
             </div>
         </div>

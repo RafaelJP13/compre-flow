@@ -1,20 +1,26 @@
 import { ArrowLeft } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
-export function CreateCompanyHeader() {
+type Props = {
+    title: string;
+    subtitle: string;
+};
+
+export function FormHeader({ title, subtitle }: Props) {
+    const navigate = useNavigate();
+
     return (
         <div className="flex items-center justify-between mb-6">
             <div>
                 <h1 className="text-3xl font-bold text-gray-800">
-                    Adicionar Empresa
+                    {title}
                 </h1>
 
-                <p className="text-sm text-gray-500 mt-1">
-                    Cadastre uma nova empresa na plataforma
-                </p>
+                <p className="text-sm text-gray-500 mt-1">{subtitle}</p>
             </div>
 
             <button
-                onClick={() => window.history.back()}
+                onClick={() => navigate(-1)}
                 className="
                     flex items-center gap-2
                     px-4 py-2

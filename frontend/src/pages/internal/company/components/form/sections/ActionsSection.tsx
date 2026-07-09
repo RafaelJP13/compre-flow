@@ -2,11 +2,17 @@ import { Save } from "lucide-react";
 
 type Props = {
     loading: boolean;
+    submitText?: string;
+    loadingText?: string;
 };
 
-export function ActionsSection({ loading }: Props) {
+export function ActionsSection({
+    loading,
+    submitText = "Salvar Empresa",
+    loadingText = "Salvando...",
+}: Props) {
     return (
-        <div className="flex justify-end mt-10">
+        <div className="flex justify-end">
             <button
                 type="submit"
                 disabled={loading}
@@ -26,7 +32,7 @@ export function ActionsSection({ loading }: Props) {
                 "
             >
                 <Save size={18} />
-                {loading ? "Salvando..." : "Salvar Empresa"}
+                {loading ? loadingText : submitText}
             </button>
         </div>
     );

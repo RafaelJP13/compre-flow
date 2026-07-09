@@ -5,7 +5,7 @@ type Props = {
     children: ReactNode;
 };
 
-export function CreateCompanyFormShell({ onSubmit, children }: Props) {
+export function FormShell({ onSubmit, children }: Props) {
     return (
         <form
             onSubmit={onSubmit}
@@ -26,7 +26,7 @@ export function CreateCompanyFormShell({ onSubmit, children }: Props) {
                 "
             />
 
-            <div className="p-8">{children}</div>
+            <div className="p-8 space-y-10">{children}</div>
         </form>
     );
 }
