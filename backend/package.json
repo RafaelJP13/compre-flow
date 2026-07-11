@@ -86,6 +86,7 @@
     "testEnvironment": "node"
   },
   "overrides": {
-    "qs": "6.15.2"
+    "qs": "6.15.2",
+    "body-parser": "^2.3.0"
   }
 }
