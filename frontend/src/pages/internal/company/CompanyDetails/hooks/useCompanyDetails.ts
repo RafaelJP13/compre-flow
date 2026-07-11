@@ -15,15 +15,8 @@ export function useCompanyDetails(id: string | undefined) {
         try {
             setLoading(true);
 
-            const token = localStorage.getItem("token");
-
             const response = await fetchWithRefresh(
-                `${API_BASE_URL}/companies/${id}`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
+                `${API_BASE_URL}/companies/${id}`
             );
 
             if (!response.ok) {
