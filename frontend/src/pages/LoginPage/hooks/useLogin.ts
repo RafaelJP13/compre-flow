@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { API_BASE_URL } from "../../../services/api";
 
 export function useLogin() {
     const [email, setEmail] = useState("");
@@ -14,7 +15,7 @@ export function useLogin() {
             setLoading(true);
             setError("");
 
-            const res = await fetch("http://localhost:3000/auth/login", {
+            const res = await fetch(`${API_BASE_URL}/auth/login`, {
                 credentials: "include",
                 method: "POST",
                 headers: {

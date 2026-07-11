@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 
-import fetchWithRefresh from "../../../../../services/api";
+import fetchWithRefresh, { API_BASE_URL } from "../../../../../services/api";
 import {
     emptyUpdateCompanyFormData,
     type BrasilApiResponse,
@@ -106,7 +106,7 @@ export function useUpdateCompanyForm(id: string | undefined) {
             setLoadingPage(true);
 
             const response = await fetchWithRefresh(
-                `http://localhost:3000/companies/${id}`
+                `${API_BASE_URL}/companies/${id}`
             );
 
             if (!response.ok) {
@@ -153,7 +153,7 @@ export function useUpdateCompanyForm(id: string | undefined) {
             setLoading(true);
 
             const response = await fetchWithRefresh(
-                `http://localhost:3000/companies/${id}`,
+                `${API_BASE_URL}/companies/${id}`,
                 {
                     method: "PUT",
                     headers: {

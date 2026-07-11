@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 
-import fetchWithRefresh from "../../../../../services/api";
+import fetchWithRefresh, { API_BASE_URL } from "../../../../../services/api";
 import {
     emptyCreateCompanyFormData,
     type BrasilApiResponse,
@@ -108,7 +108,7 @@ export function useCreateCompanyForm() {
             setLoading(true);
 
             const response = await fetchWithRefresh(
-                "http://localhost:3000/companies",
+                `${API_BASE_URL}/companies`,
                 {
                     method: "POST",
                     headers: {

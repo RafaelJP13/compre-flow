@@ -1,25 +1,13 @@
-import { useEffect, useState } from "react";
+import type { PropsWithChildren } from "react";
 import { Navigate } from "react-router-dom";
-import fetchWithRefresh from "../../services/api";
 
-type Props = {
-    children: React.ReactNode;
-};
+import { useAuthStatus } from "./hooks/useAuthStatus";
+import { AuthLoading } from "./AuthLoading";
 
-export default function PublicRoute({ children }: Props) {
-    const [status, setStatus] = useState<"loading" | "auth" | "unauth">("loading");
+export default function PublicRoute({ children }: PropsWithChildren) {
+    const status = useAuthStatus();
 
-    useEffect(() => {
-        fetchWithRefresh("http://localhost:3000/auth/me", {
-            method: "POST",
-        })
-            .then((res) => {
-                setStatus(res.ok ? "auth" : "unauth");
-            })
-            .catch(() => setStatus("unauth"));
-    }, []);
-
-    if (status === "loading") return null;
+    if (status === "loading") return <AuthLoading />;
 
     if (status === "auth") return <Navigate to="/dashboard" replace />;
 

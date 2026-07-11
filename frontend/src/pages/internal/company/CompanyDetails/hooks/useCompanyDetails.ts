@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
-import fetchWithRefresh from "../../../../../services/api";
+import fetchWithRefresh, { API_BASE_URL } from "../../../../../services/api";
 import type { Company } from "../types";
 
 export function useCompanyDetails(id: string | undefined) {
@@ -18,7 +18,7 @@ export function useCompanyDetails(id: string | undefined) {
             const token = localStorage.getItem("token");
 
             const response = await fetchWithRefresh(
-                `http://localhost:3000/companies/${id}`,
+                `${API_BASE_URL}/companies/${id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import fetchWithRefresh from "../../../../../services/api";
+import fetchWithRefresh, { API_BASE_URL } from "../../../../../services/api";
 import { ITEMS_PER_PAGE, type Company } from "../types";
 
 export function useCompanies() {
@@ -13,7 +13,7 @@ export function useCompanies() {
         const fetchCompanies = async () => {
             try {
                 const res = await fetchWithRefresh(
-                    "http://localhost:3000/companies"
+                    `${API_BASE_URL}/companies`
                 );
                 const data = await res.json();
                 setCompanies(data);

@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import fetchWithRefresh from "../../../services/api";
+import fetchWithRefresh, { API_BASE_URL } from "../../../services/api";
 
 export function useDashboardLayout() {
     const [open, setOpen] = useState(false);
     const navigate = useNavigate();
 
     async function handleLogout() {
-        await fetchWithRefresh("http://localhost:3000/auth/logout", {
+        await fetchWithRefresh(`${API_BASE_URL}/auth/logout`, {
             method: "POST",
         });
 
