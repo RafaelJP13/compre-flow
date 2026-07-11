@@ -49,7 +49,7 @@ This repository contains both frontend( Web | Mobile) and backend applications.
 - [x] Snyk to scan the dependencies
 - [x] Company Dashboard with Next.js
 - [x] Multi-tenant RBAC
-- [ ] UI Componentization
+- [x] UI Componentization
 - [ ] Company Dashboard
 - [ ] GraphQL for dashboards, aggregations, complex frontend querying
 - [ ] Company crud
