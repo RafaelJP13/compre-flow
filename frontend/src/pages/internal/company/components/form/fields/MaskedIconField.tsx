@@ -12,6 +12,7 @@ type Props = {
     icon: LucideIcon;
     rightSlot?: ReactNode;
     className?: string;
+    error?: string;
 };
 
 export function MaskedIconField({
@@ -24,7 +25,12 @@ export function MaskedIconField({
     icon: Icon,
     rightSlot,
     className,
+    error,
 }: Props) {
+    const borderClasses = error
+        ? "border-red-400 focus:ring-red-400/20 focus:border-red-400"
+        : "border-gray-200 focus:ring-[#ffac2e]/20 focus:border-[#ffac2e]";
+
     const inputClassName = rightSlot
         ? `
             w-full
@@ -32,13 +38,12 @@ export function MaskedIconField({
             pr-12
             py-3
             rounded-2xl
-            border border-gray-200
+            border
             bg-white
             outline-none
             transition
             focus:ring-4
-            focus:ring-[#ffac2e]/20
-            focus:border-[#ffac2e]
+            ${borderClasses}
         `
         : `
             w-full
@@ -46,11 +51,10 @@ export function MaskedIconField({
             pr-4
             py-3
             rounded-2xl
-            border border-gray-200
+            border
             outline-none
             focus:ring-4
-            focus:ring-[#ffac2e]/20
-            focus:border-[#ffac2e]
+            ${borderClasses}
         `;
 
     return (
@@ -95,6 +99,10 @@ export function MaskedIconField({
                     </div>
                 )}
             </div>
+
+            {error && (
+                <p className="mt-1.5 text-sm text-red-500">{error}</p>
+            )}
         </div>
     );
 }

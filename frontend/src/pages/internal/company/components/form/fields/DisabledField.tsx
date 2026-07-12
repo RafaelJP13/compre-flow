@@ -4,6 +4,7 @@ type Props = {
     value: string;
     placeholder?: string;
     className?: string;
+    error?: string;
 };
 
 export function DisabledField({
@@ -12,6 +13,7 @@ export function DisabledField({
     value,
     placeholder,
     className,
+    error,
 }: Props) {
     return (
         <div className={className}>
@@ -25,17 +27,22 @@ export function DisabledField({
                 value={value}
                 disabled
                 placeholder={placeholder}
-                className="
+                className={`
                     w-full
                     px-4 py-3
                     rounded-2xl
-                    border border-gray-200
+                    border
                     bg-gray-100
                     text-gray-500
                     cursor-not-allowed
                     outline-none
-                "
+                    ${error ? "border-red-300" : "border-gray-200"}
+                `}
             />
+
+            {error && (
+                <p className="mt-1.5 text-sm text-red-500">{error}</p>
+            )}
         </div>
     );
 }

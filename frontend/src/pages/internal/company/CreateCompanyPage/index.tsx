@@ -12,6 +12,7 @@ export default function CreateCompanyPage() {
         loadingCNPJ,
         cnpjStatus,
         formData,
+        errors,
         handleChange,
         handleDocumentChange,
         handleSubmit,
@@ -32,11 +33,13 @@ export default function CreateCompanyPage() {
                     loadingCNPJ={loadingCNPJ}
                     cnpjStatus={cnpjStatus}
                     showPasswordField
+                    errors={errors}
                 />
 
                 <AddressSection
                     formData={formData}
                     onChange={handleChange}
+                    errors={errors}
                 />
 
                 <ActionsSection

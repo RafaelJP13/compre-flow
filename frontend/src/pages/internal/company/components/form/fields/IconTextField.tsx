@@ -10,6 +10,7 @@ type Props = {
     icon: LucideIcon;
     className?: string;
     disabled?: boolean;
+    error?: string;
 };
 
 export function IconTextField({
@@ -22,6 +23,7 @@ export function IconTextField({
     icon: Icon,
     className,
     disabled,
+    error,
 }: Props) {
     return (
         <div className={className}>
@@ -48,23 +50,29 @@ export function IconTextField({
                     onChange={onChange}
                     placeholder={placeholder}
                     disabled={disabled}
-                    className="
+                    className={`
                         w-full
                         pl-12
                         pr-4
                         py-3
                         rounded-2xl
-                        border border-gray-200
+                        border
                         outline-none
                         focus:ring-4
-                        focus:ring-[#ffac2e]/20
-                        focus:border-[#ffac2e]
                         disabled:bg-gray-100
                         disabled:text-gray-500
                         disabled:cursor-not-allowed
-                    "
+                        ${error
+                            ? "border-red-400 focus:ring-red-400/20 focus:border-red-400"
+                            : "border-gray-200 focus:ring-[#ffac2e]/20 focus:border-[#ffac2e]"
+                        }
+                    `}
                 />
             </div>
+
+            {error && (
+                <p className="mt-1.5 text-sm text-red-500">{error}</p>
+            )}
         </div>
     );
 }

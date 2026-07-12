@@ -9,12 +9,16 @@ import {
     type CnpjStatus,
     type CreateCompanyFormData,
 } from "../../components/form/types";
+import { getCreateCompanyFormErrors } from "../../components/form/validation";
+
+type FormErrors = Partial<Record<keyof CreateCompanyFormData, string>>;
 
 export function useCreateCompanyForm() {
     const [loading, setLoading] = useState(false);
     const [loadingCNPJ, setLoadingCNPJ] = useState(false);
 
     const [cnpjStatus, setCnpjStatus] = useState<CnpjStatus>("idle");
+    const [errors, setErrors] = useState<FormErrors>({});
 
     const navigate = useNavigate();
     const [formData, setFormData] = useState<CreateCompanyFormData>(
@@ -24,9 +28,18 @@ export function useCreateCompanyForm() {
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement>
     ) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value,
+        const { name, value } = e.target;
+
+        setFormData((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+
+        setErrors((prev) => {
+            if (!prev[name as keyof CreateCompanyFormData]) return prev;
+            const next = { ...prev };
+            delete next[name as keyof CreateCompanyFormData];
+            return next;
         });
     };
 
@@ -70,6 +83,23 @@ export function useCreateCompanyForm() {
             }));
 
             setCnpjStatus("success");
+
+            setErrors((prev) => {
+                const next = { ...prev };
+                (
+                    [
+                        "fantasyName",
+                        "legalName",
+                        "cnpj_status",
+                        "cep",
+                        "phone",
+                        "address",
+                        "city",
+                        "state",
+                    ] as (keyof CreateCompanyFormData)[]
+                ).forEach((field) => delete next[field]);
+                return next;
+            });
         } catch (error) {
             console.error(error);
 
@@ -84,9 +114,16 @@ export function useCreateCompanyForm() {
     ) => {
         const value = e.target.value;
 
-        setFormData({
-            ...formData,
+        setFormData((prev) => ({
+            ...prev,
             cnpj: value,
+        }));
+
+        setErrors((prev) => {
+            if (!prev.cnpj) return prev;
+            const next = { ...prev };
+            delete next.cnpj;
+            return next;
         });
 
         const cleaned = value.replace(/\D/g, "");
@@ -100,6 +137,14 @@ export function useCreateCompanyForm() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        const formErrors = getCreateCompanyFormErrors(formData);
+
+        if (Object.keys(formErrors).length > 0) {
+            setErrors(formErrors);
+            toast.error("Preencha todos os campos obrigatórios.");
+            return;
+        }
 
         try {
             setLoading(true);
@@ -130,6 +175,7 @@ export function useCreateCompanyForm() {
             setFormData(emptyCreateCompanyFormData);
 
             setCnpjStatus("idle");
+            setErrors({});
         } catch (error) {
             console.error(error);
 
@@ -144,6 +190,7 @@ export function useCreateCompanyForm() {
         loadingCNPJ,
         cnpjStatus,
         formData,
+        errors,
         handleChange,
         handleDocumentChange,
         handleSubmit,

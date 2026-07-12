@@ -17,6 +17,7 @@ export default function UpdateCompanyPage() {
         loadingCNPJ,
         cnpjStatus,
         formData,
+        errors,
         handleChange,
         handleDocumentChange,
         handleSubmit,
@@ -45,11 +46,13 @@ export default function UpdateCompanyPage() {
                     loadingCNPJ={loadingCNPJ}
                     cnpjStatus={cnpjStatus}
                     disableEmailField
+                    errors={errors}
                 />
 
                 <AddressSection
                     formData={formData}
                     onChange={handleChange}
+                    errors={errors}
                 />
 
                 <ActionsSection

@@ -9,6 +9,10 @@ import { SectionHeading } from "./SectionHeading";
 
 import type { CnpjStatus, CompanyBaseFormData } from "../types";
 
+type CompanyInfoErrors = Partial<
+    Record<keyof CompanyBaseFormData | "passwordAdmin", string>
+>;
+
 type Props = {
     formData: CompanyBaseFormData & { passwordAdmin?: string };
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -19,6 +23,7 @@ type Props = {
     showPasswordField?: boolean;
     /** The admin e-mail can't be changed once the company already exists. */
     disableEmailField?: boolean;
+    errors?: CompanyInfoErrors;
 };
 
 export function CompanyInfoSection({
@@ -29,6 +34,7 @@ export function CompanyInfoSection({
     cnpjStatus,
     showPasswordField = false,
     disableEmailField = false,
+    errors = {},
 }: Props) {
     return (
         <div>
@@ -45,6 +51,7 @@ export function CompanyInfoSection({
                     value={formData.adminName}
                     onChange={onChange}
                     placeholder="Digite o nome"
+                    error={errors.adminName}
                 />
 
                 <IconTextField
@@ -56,6 +63,7 @@ export function CompanyInfoSection({
                     placeholder="admin@empresa.com"
                     icon={Mail}
                     disabled={disableEmailField}
+                    error={errors.adminEmail}
                 />
 
                 {showPasswordField && (
@@ -67,6 +75,7 @@ export function CompanyInfoSection({
                         onChange={onChange}
                         placeholder="••••••••"
                         icon={Mail}
+                        error={errors.passwordAdmin}
                     />
                 )}
 
@@ -84,6 +93,7 @@ export function CompanyInfoSection({
                             status={cnpjStatus}
                         />
                     }
+                    error={errors.cnpj}
                 />
 
                 <DisabledField
@@ -91,6 +101,7 @@ export function CompanyInfoSection({
                     name="cnpj_status"
                     value={formData.cnpj_status}
                     placeholder="ATIVA"
+                    error={errors.cnpj_status}
                 />
 
                 <DisabledField
@@ -98,6 +109,7 @@ export function CompanyInfoSection({
                     name="fantasyName"
                     value={formData.fantasyName}
                     placeholder="Preenchido automaticamente"
+                    error={errors.fantasyName}
                 />
 
                 <DisabledField
@@ -105,6 +117,7 @@ export function CompanyInfoSection({
                     name="legalName"
                     value={formData.legalName}
                     placeholder="Preenchido automaticamente"
+                    error={errors.legalName}
                 />
 
                 <MaskedIconField
@@ -115,6 +128,7 @@ export function CompanyInfoSection({
                     onChange={onChange}
                     placeholder="(11) 99999-9999"
                     icon={Phone}
+                    error={errors.phone}
                 />
             </div>
         </div>

@@ -9,6 +9,9 @@ import {
     type CnpjStatus,
     type UpdateCompanyFormData,
 } from "../../components/form/types";
+import { getUpdateCompanyFormErrors } from "../../components/form/validation";
+
+type FormErrors = Partial<Record<keyof UpdateCompanyFormData, string>>;
 
 export function useUpdateCompanyForm(id: string | undefined) {
     const navigate = useNavigate();
@@ -18,6 +21,7 @@ export function useUpdateCompanyForm(id: string | undefined) {
     const [loadingCNPJ, setLoadingCNPJ] = useState(false);
 
     const [cnpjStatus, setCnpjStatus] = useState<CnpjStatus>("idle");
+    const [errors, setErrors] = useState<FormErrors>({});
 
     const [formData, setFormData] = useState<UpdateCompanyFormData>(
         emptyUpdateCompanyFormData
@@ -26,10 +30,19 @@ export function useUpdateCompanyForm(id: string | undefined) {
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement>
     ) => {
+        const { name, value } = e.target;
+
         setFormData((prev) => ({
             ...prev,
-            [e.target.name]: e.target.value,
+            [name]: value,
         }));
+
+        setErrors((prev) => {
+            if (!prev[name as keyof UpdateCompanyFormData]) return prev;
+            const next = { ...prev };
+            delete next[name as keyof UpdateCompanyFormData];
+            return next;
+        });
     };
 
     const fetchCNPJ = async (cnpj: string) => {
@@ -73,6 +86,23 @@ export function useUpdateCompanyForm(id: string | undefined) {
             }));
 
             setCnpjStatus("success");
+
+            setErrors((prev) => {
+                const next = { ...prev };
+                (
+                    [
+                        "fantasyName",
+                        "legalName",
+                        "cnpj_status",
+                        "cep",
+                        "phone",
+                        "address",
+                        "city",
+                        "state",
+                    ] as (keyof UpdateCompanyFormData)[]
+                ).forEach((field) => delete next[field]);
+                return next;
+            });
         } catch (error) {
             console.error(error);
 
@@ -91,6 +121,13 @@ export function useUpdateCompanyForm(id: string | undefined) {
             ...prev,
             cnpj: value,
         }));
+
+        setErrors((prev) => {
+            if (!prev.cnpj) return prev;
+            const next = { ...prev };
+            delete next.cnpj;
+            return next;
+        });
 
         const cleaned = value.replace(/\D/g, "");
 
@@ -149,6 +186,14 @@ export function useUpdateCompanyForm(id: string | undefined) {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
+        const formErrors = getUpdateCompanyFormErrors(formData);
+
+        if (Object.keys(formErrors).length > 0) {
+            setErrors(formErrors);
+            toast.error("Preencha todos os campos obrigatórios.");
+            return;
+        }
+
         try {
             setLoading(true);
 
@@ -190,6 +235,7 @@ export function useUpdateCompanyForm(id: string | undefined) {
         loadingCNPJ,
         cnpjStatus,
         formData,
+        errors,
         handleChange,
         handleDocumentChange,
         handleSubmit,

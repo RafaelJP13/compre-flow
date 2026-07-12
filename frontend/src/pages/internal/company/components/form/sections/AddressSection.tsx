@@ -6,12 +6,17 @@ import { SectionHeading } from "./SectionHeading";
 
 import type { CompanyBaseFormData } from "../types";
 
+type AddressErrors = Partial<
+    Pick<CompanyBaseFormData, "cep" | "state" | "city" | "address">
+>;
+
 type Props = {
     formData: CompanyBaseFormData;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    errors?: AddressErrors;
 };
 
-export function AddressSection({ formData, onChange }: Props) {
+export function AddressSection({ formData, onChange, errors = {} }: Props) {
     return (
         <div>
             <SectionHeading
@@ -28,6 +33,7 @@ export function AddressSection({ formData, onChange }: Props) {
                     value={formData.cep}
                     onChange={onChange}
                     placeholder="11325-030"
+                    error={errors.cep}
                 />
 
                 <TextField
@@ -36,6 +42,7 @@ export function AddressSection({ formData, onChange }: Props) {
                     value={formData.state}
                     onChange={onChange}
                     placeholder="SP"
+                    error={errors.state}
                 />
 
                 <TextField
@@ -44,6 +51,7 @@ export function AddressSection({ formData, onChange }: Props) {
                     value={formData.city}
                     onChange={onChange}
                     placeholder="São Paulo"
+                    error={errors.city}
                 />
 
                 <TextField
@@ -53,6 +61,7 @@ export function AddressSection({ formData, onChange }: Props) {
                     onChange={onChange}
                     placeholder="Rua, número e bairro"
                     className="md:col-span-2"
+                    error={errors.address}
                 />
             </div>
         </div>
