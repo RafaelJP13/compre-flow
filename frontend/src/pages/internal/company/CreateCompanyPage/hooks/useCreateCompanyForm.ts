@@ -58,14 +58,11 @@ export function useCreateCompanyForm() {
                 cnpj_status: data.descricao_situacao_cadastral || "",
 
                 cep: data.cep || "",
-
-                adminEmail: data.email || "",
                 passwordAdmin: "",
                 phone: data.ddd_telefone_1 || "",
 
-                address: `${data.logradouro || ""}, ${
-                    data.numero || ""
-                } - ${data.bairro || ""}`,
+                address: `${data.logradouro || ""}, ${data.numero || ""
+                    } - ${data.bairro || ""}`,
 
                 city: data.municipio || "",
 
